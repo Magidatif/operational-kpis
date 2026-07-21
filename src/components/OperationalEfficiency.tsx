@@ -9,7 +9,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
   LabelList
 } from 'recharts';
 import { Clock, Building2, MapPin, TrendingUp, AlertCircle } from 'lucide-react';

@@ -238,7 +238,7 @@ export const ConsultantsAnalysis: React.FC<ConsultantsAnalysisProps> = ({ record
                 cornerRadius={5}
                 stroke="none"
                 dataKey="value"
-                label={({ cx, cy, x, y, value }) => {
+                label={({ cx, x, y, value }) => {
                   return (
                     <text
                       x={x}

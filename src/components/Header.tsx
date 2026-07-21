@@ -3,7 +3,6 @@ import {
   Activity,
   BarChart3,
   GitCompare,
-  CloudUpload,
   RefreshCw,
   Globe
 } from 'lucide-react';
@@ -26,7 +25,6 @@ export const Header: React.FC<HeaderProps> = ({
   onViewChange,
   lang,
   onToggleLanguage,
-  onOpenDeployGuide,
   totalRecordsCount,
   onClearData
 }) => {
