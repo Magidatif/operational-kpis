@@ -13,7 +13,7 @@ import {
 } from 'recharts';
 import { Clock, Building2, MapPin, TrendingUp, AlertCircle } from 'lucide-react';
 import type { PatientRecord } from '../types';
-import { calculatePeakHours, calculateWaitTimeByGroup } from '../utils/dataProcessor';
+import { calculatePeakHours, calculateWaitTimeByGroup, calculatePatientFlow } from '../utils/dataProcessor';
 import { translations } from '../utils/translations';
 import type { Language } from '../utils/translations';
 
@@ -28,6 +28,7 @@ export const OperationalEfficiency: React.FC<OperationalEfficiencyProps> = ({ re
 
   const peakData = calculatePeakHours(records);
   const waitTimeGroupData = calculateWaitTimeByGroup(records, groupBy);
+  const flowData = calculatePatientFlow(records);
 
   // Peak hour highlight
   const maxPeak = peakData.reduce((max, item) => (item.count > max.count ? item : max), { count: 0, hour: '00:00' });
@@ -175,7 +176,7 @@ export const OperationalEfficiency: React.FC<OperationalEfficiencyProps> = ({ re
                 />
                 <Tooltip
                   formatter={(value: any, _name: any, item: any) => [
-                    `${value} ${t.minutesUnit} (${t.kpiTotalPatients}: ${item.payload.totalPatients})`,
+                    `${t.formatDuration(value)} (${t.kpiTotalPatients}: ${item.payload.totalPatients})`,
                     t.kpiAvgWaitTime
                   ]}
                 />
@@ -194,7 +195,7 @@ export const OperationalEfficiency: React.FC<OperationalEfficiencyProps> = ({ re
                           textAnchor="end"
                           dominantBaseline="central"
                         >
-                          {value} {t.minutesUnit}
+                          {t.formatDuration(value)}
                         </text>
                       );
                     }}
@@ -203,6 +204,46 @@ export const OperationalEfficiency: React.FC<OperationalEfficiencyProps> = ({ re
               </BarChart>
             </ResponsiveContainer>
           </div>
+        </div>
+      </div>
+
+      {/* 3. Patient Flow Analysis */}
+      <div className="glass-card p-5 transition-all lg:col-span-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-[#E2E8F0]">
+          <div>
+            <h3 className="text-sm font-extrabold text-[#1E3A8A] flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-[#10B981]" />
+              <span>{t.patientFlowTitle}</span>
+            </h3>
+            <p className="text-xs text-[#64748B] mt-0.5 font-medium">
+              {t.patientFlowSub}
+            </p>
+          </div>
+        </div>
+
+        <div className="h-80 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={flowData} margin={{ top: 20, right: 30, left: -20, bottom: 0 }}>
+              <defs>
+                <linearGradient id="colorCheckIn" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#0EA5E9" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#0EA5E9" stopOpacity={0}/>
+                </linearGradient>
+                <linearGradient id="colorCheckOut" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="date" stroke="#64748B" fontSize={11} tickLine={false} />
+              <YAxis stroke="#64748B" fontSize={11} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+              <Tooltip
+                formatter={(value: any, name: any) => [value, name === 'checkIns' ? t.checkInLabel : t.checkOutLabel]}
+              />
+              <Area type="monotone" dataKey="checkIns" name="checkIns" stroke="#0EA5E9" fillOpacity={1} fill="url(#colorCheckIn)" strokeWidth={2} />
+              <Area type="monotone" dataKey="checkOuts" name="checkOuts" stroke="#10B981" fillOpacity={1} fill="url(#colorCheckOut)" strokeWidth={2} />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>

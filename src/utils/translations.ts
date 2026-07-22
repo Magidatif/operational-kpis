@@ -62,6 +62,19 @@ export const translations = {
     kpiCompletedConsultations: 'الاستشارات المكتملة',
     kpiCompletedConsultationsSub: 'تصفية حسب Queue Status Desc',
     minutesUnit: 'دقيقة',
+    formatDuration: (totalMinutes: number) => {
+      if (totalMinutes === null || totalMinutes === undefined || isNaN(totalMinutes)) return '-';
+      const days = Math.floor(totalMinutes / (24 * 60));
+      const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+      const minutes = Math.floor(totalMinutes % 60);
+      
+      const parts = [];
+      if (days > 0) parts.push(`${days} يوم`);
+      if (hours > 0) parts.push(`${hours} ساعة`);
+      if (minutes > 0 || parts.length === 0) parts.push(`${minutes} دقيقة`);
+      
+      return parts.join(' و ');
+    },
     completionPercentage: (rate: number) => `${rate}% إنجاز`,
 
     // Operational Efficiency
@@ -73,6 +86,10 @@ export const translations = {
     countLabel: 'عدد المرضى',
     waitTimeTitle: 'تحليل الازدحام متوسط زمن الانتظار (بالدقائق)',
     waitTimeSub: 'تحديد المنشآت أو المناطق الأكثر تضرراً وتأخراً في خدمة المرضى',
+    patientFlowTitle: 'تحليل حركة المرضى (تسجيل الدخول مقابل الخروج)',
+    patientFlowSub: 'مقارنة بين إجمالي عدد حالات Check in و Check Out حسب التاريخ',
+    checkInLabel: 'تسجيل دخول',
+    checkOutLabel: 'تسجيل خروج',
     btnHospital: 'المستشفى',
     btnRegion: 'المنطقة',
 
@@ -215,6 +232,19 @@ export const translations = {
     kpiCompletedConsultations: 'Completed Consultations',
     kpiCompletedConsultationsSub: 'Filtered by Queue Status Desc',
     minutesUnit: 'mins',
+    formatDuration: (totalMinutes: number) => {
+      if (totalMinutes === null || totalMinutes === undefined || isNaN(totalMinutes)) return '-';
+      const days = Math.floor(totalMinutes / (24 * 60));
+      const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+      const minutes = Math.floor(totalMinutes % 60);
+      
+      const parts = [];
+      if (days > 0) parts.push(`${days}d`);
+      if (hours > 0) parts.push(`${hours}h`);
+      if (minutes > 0 || parts.length === 0) parts.push(`${minutes}m`);
+      
+      return parts.join(' ');
+    },
     completionPercentage: (rate: number) => `${rate}% Completed`,
 
     // Operational Efficiency
@@ -226,6 +256,10 @@ export const translations = {
     countLabel: 'Patients Count',
     waitTimeTitle: 'Average Wait Time Congestion Analysis (Minutes)',
     waitTimeSub: 'Identify facilities or regions experiencing bottlenecks and service delays',
+    patientFlowTitle: 'Patient Flow Analysis (Check In vs Check Out)',
+    patientFlowSub: 'Comparison between total Check ins and Check outs by date',
+    checkInLabel: 'Check In',
+    checkOutLabel: 'Check Out',
     btnHospital: 'Facility',
     btnRegion: 'Region',
 

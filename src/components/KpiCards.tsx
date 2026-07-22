@@ -39,10 +39,9 @@ export const KpiCards: React.FC<KpiCardsProps> = ({ kpis, lang }) => {
           <div>
             <p className="text-xs font-bold text-[#64748B]">{t.kpiAvgWaitTime}</p>
             <div className="flex items-baseline gap-1 mt-1">
-              <h3 className="text-3xl font-black text-[#F59E0B] tracking-tight">
-                {kpis.avgWaitTime}
+              <h3 className="text-xl sm:text-2xl font-black text-[#F59E0B] tracking-tight">
+                {t.formatDuration(kpis.avgWaitTime)}
               </h3>
-              <span className="text-xs text-[#F59E0B] font-extrabold">{t.minutesUnit}</span>
             </div>
             <div className="flex items-center gap-1 mt-2 text-[11px] text-[#F59E0B] font-bold">
               <Clock className="w-3.5 h-3.5" />
@@ -61,10 +60,9 @@ export const KpiCards: React.FC<KpiCardsProps> = ({ kpis, lang }) => {
           <div>
             <p className="text-xs font-bold text-[#64748B]">{t.kpiAvgConsultTime}</p>
             <div className="flex items-baseline gap-1 mt-1">
-              <h3 className="text-3xl font-black text-[#0EA5E9] tracking-tight">
-                {kpis.avgConsultTime}
+              <h3 className="text-xl sm:text-2xl font-black text-[#0EA5E9] tracking-tight">
+                {t.formatDuration(kpis.avgConsultTime)}
               </h3>
-              <span className="text-xs text-[#0EA5E9] font-extrabold">{t.minutesUnit}</span>
             </div>
             <div className="flex items-center gap-1 mt-2 text-[11px] text-[#0EA5E9] font-bold">
               <Stethoscope className="w-3.5 h-3.5" />

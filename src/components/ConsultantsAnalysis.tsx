@@ -151,7 +151,7 @@ export const ConsultantsAnalysis: React.FC<ConsultantsAnalysisProps> = ({ record
                   />
                   <Tooltip
                     formatter={(value: any, _name: any, item: any) => [
-                      `${Number(value).toLocaleString()} (${t.kpiAvgConsultTime}: ${item.payload.avgConsultTime} ${t.minutesUnit})`,
+                      `${Number(value).toLocaleString()} (${t.kpiAvgConsultTime}: ${t.formatDuration(item.payload.avgConsultTime)})`,
                       t.colCompletedCount
                     ]}
                   />
@@ -203,8 +203,8 @@ export const ConsultantsAnalysis: React.FC<ConsultantsAnalysisProps> = ({ record
                     </td>
                     <td className="p-2.5 text-[#64748B] font-semibold">{doc.facilityName}</td>
                     <td className="p-2.5 font-black text-[#10B981]">{doc.completedCount.toLocaleString()}</td>
-                    <td className="p-2.5 text-[#0EA5E9] font-extrabold">{doc.avgConsultTime} {t.minutesUnit}</td>
-                    <td className="p-2.5 text-[#F59E0B] font-extrabold">{doc.avgWaitTime} {t.minutesUnit}</td>
+                    <td className="p-2.5 text-[#0EA5E9] font-extrabold">{t.formatDuration(doc.avgConsultTime)}</td>
+                    <td className="p-2.5 text-[#F59E0B] font-extrabold">{t.formatDuration(doc.avgWaitTime)}</td>
                   </tr>
                 ))}
               </tbody>

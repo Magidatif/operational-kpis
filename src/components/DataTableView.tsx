@@ -139,10 +139,10 @@ export const DataTableView: React.FC<DataTableViewProps> = ({ records, lang }) =
                   </td>
                   <td className="p-3 text-[#64748B] font-mono text-[11px]">{r.checkInDate}</td>
                   <td className="p-3 font-black text-[#F59E0B]">
-                    {r.waitTimeMinutes !== null ? `${r.waitTimeMinutes} ${t.minutesUnit}` : '-'}
+                    {r.waitTimeMinutes !== null ? t.formatDuration(r.waitTimeMinutes) : '-'}
                   </td>
                   <td className="p-3 font-black text-[#0EA5E9]">
-                    {r.consultationTimeMinutes !== null ? `${r.consultationTimeMinutes} ${t.minutesUnit}` : '-'}
+                    {r.consultationTimeMinutes !== null ? t.formatDuration(r.consultationTimeMinutes) : '-'}
                   </td>
                   <td className="p-3 text-[#1E3A8A] font-bold">
                     <div className="flex items-center gap-1">

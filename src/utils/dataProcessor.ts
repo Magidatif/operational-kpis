@@ -153,6 +153,36 @@ export function calculatePeakHours(records: PatientRecord[]) {
 }
 
 /**
+ * Patient Flow Analysis: Check Ins vs Check Outs by Date
+ */
+export function calculatePatientFlow(records: PatientRecord[]) {
+  const flowData: Record<string, { date: string; checkIns: number; checkOuts: number }> = {};
+
+  records.forEach((r) => {
+    // Check Ins
+    if (r.checkInDay) {
+      if (!flowData[r.checkInDay]) {
+        flowData[r.checkInDay] = { date: r.checkInDay, checkIns: 0, checkOuts: 0 };
+      }
+      flowData[r.checkInDay].checkIns++;
+    }
+
+    // Check Outs
+    if (r.checkOutDate && typeof r.checkOutDate === 'string') {
+      const checkOutDay = r.checkOutDate.split(' ')[0];
+      if (checkOutDay && checkOutDay.length === 10) {
+        if (!flowData[checkOutDay]) {
+          flowData[checkOutDay] = { date: checkOutDay, checkIns: 0, checkOuts: 0 };
+        }
+        flowData[checkOutDay].checkOuts++;
+      }
+    }
+  });
+
+  return Object.values(flowData).sort((a, b) => a.date.localeCompare(b.date));
+}
+
+/**
  * Average wait time by Facility or Region
  */
 export function calculateWaitTimeByGroup(
