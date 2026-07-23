@@ -13,7 +13,7 @@ export const KpiCards: React.FC<KpiCardsProps> = ({ kpis, lang }) => {
   const t = translations[lang];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
       {/* 1. Total Patients Card */}
       <div className="glass-card p-5 relative overflow-hidden transition-all hover:scale-[1.01] hover:border-[#1E3A8A]">
         <div className="flex items-center justify-between">
@@ -95,6 +95,26 @@ export const KpiCards: React.FC<KpiCardsProps> = ({ kpis, lang }) => {
           </div>
           <div className="p-3.5 bg-[#10B981]/10 text-[#10B981] rounded-2xl border border-[#10B981]/20 shadow-inner">
             <CheckCircle2 className="w-7 h-7" />
+          </div>
+        </div>
+      </div>
+      {/* 5. Avg Turnaround Time Card */}
+      <div className="glass-card p-5 relative overflow-hidden transition-all hover:scale-[1.01] hover:border-[#8B5CF6]">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold text-[#64748B]">{t.kpiAvgTurnaroundTime}</p>
+            <div className="flex items-baseline gap-1 mt-1">
+              <h3 className="text-xl sm:text-2xl font-black text-[#8B5CF6] tracking-tight">
+                {t.formatDuration(kpis.avgTurnaroundTime)}
+              </h3>
+            </div>
+            <div className="flex items-center gap-1 mt-2 text-[11px] text-[#8B5CF6] font-bold">
+              <Clock className="w-3.5 h-3.5" />
+              <span>{t.kpiAvgTurnaroundTimeSub}</span>
+            </div>
+          </div>
+          <div className="p-3.5 bg-[#8B5CF6]/10 text-[#8B5CF6] rounded-2xl border border-[#8B5CF6]/20 shadow-inner">
+            <Clock className="w-7 h-7" />
           </div>
         </div>
       </div>

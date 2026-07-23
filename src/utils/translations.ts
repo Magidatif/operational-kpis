@@ -59,6 +59,8 @@ export const translations = {
     kpiAvgWaitTimeSub: '(Assign Date - Check in Date)',
     kpiAvgConsultTime: 'متوسط زمن الكشف',
     kpiAvgConsultTimeSub: '(Check Out - Consultation Date)',
+    kpiAvgTurnaroundTime: 'متوسط بقاء المريض',
+    kpiAvgTurnaroundTimeSub: '(من التسجيل وحتى الخروج)',
     kpiCompletedConsultations: 'الاستشارات المكتملة',
     kpiCompletedConsultationsSub: 'تصفية حسب Queue Status Desc',
     minutesUnit: 'دقيقة',
@@ -93,6 +95,10 @@ export const translations = {
     avgTurnaroundLabel: 'متوسط مدة بقاء المريض',
     btnHospital: 'المستشفى',
     btnRegion: 'المنطقة',
+    btnShowAll: 'الكل',
+    btnShowVolume: 'حركة الدخول/الخروج',
+
+    btnShowTurnaround: 'زمن البقاء',
 
     // Consultants Analysis
     doctorsTitle: 'ترتيب الأطباء الأكثر إنجازاً للكشوفات (Consult Performed By)',
@@ -230,6 +236,8 @@ export const translations = {
     kpiAvgWaitTimeSub: '(Assign Date - Check in Date)',
     kpiAvgConsultTime: 'Avg. Consult Time',
     kpiAvgConsultTimeSub: '(Check Out - Consultation Date)',
+    kpiAvgTurnaroundTime: 'Avg Turnaround Time',
+    kpiAvgTurnaroundTimeSub: '(Check In to Check Out)',
     kpiCompletedConsultations: 'Completed Consultations',
     kpiCompletedConsultationsSub: 'Filtered by Queue Status Desc',
     minutesUnit: 'mins',
@@ -264,6 +272,10 @@ export const translations = {
     avgTurnaroundLabel: 'Avg Turnaround Time',
     btnHospital: 'Hospital',
     btnRegion: 'Region',
+    btnShowAll: 'All',
+    btnShowVolume: 'Check In/Out Volume',
+
+    btnShowTurnaround: 'Turnaround Time',
 
     // Consultants Analysis
     doctorsTitle: 'Consultants Performance Ranking (Consult Performed By)',

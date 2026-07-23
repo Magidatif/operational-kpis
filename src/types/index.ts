@@ -65,6 +65,7 @@ export interface KpiSummary {
   totalPatients: number;
   avgWaitTime: number; // minutes
   avgConsultTime: number; // minutes
+  avgTurnaroundTime: number; // minutes
   completedConsultations: number;
   totalCancelled: number;
   totalWaiting: number;

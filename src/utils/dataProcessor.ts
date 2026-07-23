@@ -113,12 +113,22 @@ export function calculateKpis(records: PatientRecord[]): KpiSummary {
       ? Math.round(validConsultTimes.reduce((acc, curr) => acc + curr, 0) / validConsultTimes.length)
       : 0;
 
+  // Avg Turnaround Time (Check Out - Check In)
+  const validTurnaroundTimes = records
+    .map((r) => r.totalTurnaroundMinutes)
+    .filter((v): v is number => v !== null && v >= 0);
+  const avgTurnaroundTime =
+    validTurnaroundTimes.length > 0
+      ? Math.round(validTurnaroundTimes.reduce((acc, curr) => acc + curr, 0) / validTurnaroundTimes.length)
+      : 0;
+
   const completionRate = Math.round((completedConsultations / totalPatients) * 100);
 
   return {
     totalPatients,
     avgWaitTime,
     avgConsultTime,
+    avgTurnaroundTime,
     completedConsultations,
     totalCancelled: cancelledRecords.length,
     totalWaiting: waitingRecords.length,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   ComposedChart,
+  AreaChart,
   Area,
   BarChart,
   Bar,
@@ -25,6 +26,7 @@ interface OperationalEfficiencyProps {
 
 export const OperationalEfficiency: React.FC<OperationalEfficiencyProps> = ({ records, lang }) => {
   const [groupBy, setGroupBy] = useState<'facilityName' | 'regionName'>('facilityName');
+  const [flowMode, setFlowMode] = useState<'all' | 'volume' | 'turnaround'>('all');
   const t = translations[lang];
 
   const peakData = calculatePeakHours(records);
@@ -220,6 +222,27 @@ export const OperationalEfficiency: React.FC<OperationalEfficiencyProps> = ({ re
               {t.patientFlowSub}
             </p>
           </div>
+          
+          <div className="flex items-center bg-[#F1F5F9] p-0.5 rounded-lg border border-[#E2E8F0] self-start sm:self-auto">
+            <button
+              onClick={() => setFlowMode('all')}
+              className={`px-2.5 py-1 text-[11px] rounded-md font-bold transition-all ${flowMode === 'all' ? 'bg-[#1E3A8A] text-white' : 'text-[#64748B] hover:text-[#0F172A]'}`}
+            >
+              {t.btnShowAll}
+            </button>
+            <button
+              onClick={() => setFlowMode('volume')}
+              className={`px-2.5 py-1 text-[11px] rounded-md font-bold transition-all ${flowMode === 'volume' ? 'bg-[#1E3A8A] text-white' : 'text-[#64748B] hover:text-[#0F172A]'}`}
+            >
+              {t.btnShowVolume}
+            </button>
+            <button
+              onClick={() => setFlowMode('turnaround')}
+              className={`px-2.5 py-1 text-[11px] rounded-md font-bold transition-all ${flowMode === 'turnaround' ? 'bg-[#1E3A8A] text-white' : 'text-[#64748B] hover:text-[#0F172A]'}`}
+            >
+              {t.btnShowTurnaround}
+            </button>
+          </div>
         </div>
 
         <div className="h-80 w-full">
@@ -236,8 +259,15 @@ export const OperationalEfficiency: React.FC<OperationalEfficiencyProps> = ({ re
                 </linearGradient>
               </defs>
               <XAxis dataKey="date" stroke="#64748B" fontSize={11} tickLine={false} />
-              <YAxis yAxisId="left" stroke="#64748B" fontSize={11} tickLine={false} />
-              <YAxis yAxisId="right" orientation="right" stroke="#F59E0B" fontSize={11} tickLine={false} />
+              
+              {(flowMode === 'all' || flowMode === 'volume') && (
+                <YAxis yAxisId="left" stroke="#64748B" fontSize={11} tickLine={false} />
+              )}
+              
+              {(flowMode === 'all' || flowMode === 'turnaround') && (
+                <YAxis yAxisId="right" orientation={flowMode === 'turnaround' ? 'left' : 'right'} stroke="#F59E0B" fontSize={11} tickLine={false} />
+              )}
+              
               <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
               <Tooltip
                 formatter={(value: any, name: any) => {
@@ -245,9 +275,17 @@ export const OperationalEfficiency: React.FC<OperationalEfficiencyProps> = ({ re
                   return [value, name === 'checkIns' ? t.checkInLabel : t.checkOutLabel];
                 }}
               />
-              <Area yAxisId="left" type="monotone" dataKey="checkIns" name="checkIns" stroke="#0EA5E9" fillOpacity={1} fill="url(#colorCheckIn)" strokeWidth={2} />
-              <Area yAxisId="left" type="monotone" dataKey="checkOuts" name="checkOuts" stroke="#10B981" fillOpacity={1} fill="url(#colorCheckOut)" strokeWidth={2} />
-              <Line yAxisId="right" type="monotone" dataKey="avgTurnaround" name="avgTurnaround" stroke="#F59E0B" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+              
+              {(flowMode === 'all' || flowMode === 'volume') && (
+                <>
+                  <Area yAxisId="left" type="monotone" dataKey="checkIns" name="checkIns" stroke="#0EA5E9" fillOpacity={1} fill="url(#colorCheckIn)" strokeWidth={2} />
+                  <Area yAxisId="left" type="monotone" dataKey="checkOuts" name="checkOuts" stroke="#10B981" fillOpacity={1} fill="url(#colorCheckOut)" strokeWidth={2} />
+                </>
+              )}
+              
+              {(flowMode === 'all' || flowMode === 'turnaround') && (
+                <Line yAxisId="right" type="monotone" dataKey="avgTurnaround" name="avgTurnaround" stroke="#F59E0B" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+              )}
             </ComposedChart>
           </ResponsiveContainer>
         </div>
