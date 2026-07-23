@@ -93,19 +93,19 @@ function normalizeGender(val: any): 'ذكر' | 'أنثى' | 'غير محدد' {
  * Transform raw row object into normalized PatientRecord
  */
 export function normalizeRawRecord(row: RawPatientRecord, index: number, sourceFile: string): PatientRecord {
-  const regionCode = String(findColumnValue(row, ['Region Code', 'RegionCode', 'كود المنطقة']) || 'REG-01');
-  const regionName = String(findColumnValue(row, ['Region_Name', 'Region Name', 'المنطقة']) || 'المنطقة الوسطى');
-  const facilityId = String(findColumnValue(row, ['Facility Id', 'FacilityId', 'كود المنشأة']) || 'FAC-101');
-  const facilityName = String(findColumnValue(row, ['Facility Name', 'FacilityName', 'اسم المنشأة', 'المستشفى']) || 'مستشفى السلام العام');
-  const patientId = String(findColumnValue(row, ['Patient ID', 'PatientId', 'رقم المريض']) || `PT-${1000 + index}`);
-  const patientName = String(findColumnValue(row, ['Patient Name', 'PatientName', 'اسم المريض']) || `مريض ${index + 1}`);
+  const regionCode = String(findColumnValue(row, ['Region Code', 'RegionCode', 'كود المنطقة']) || '');
+  const regionName = String(findColumnValue(row, ['Region_Name', 'Region Name', 'المنطقة']) || '');
+  const facilityId = String(findColumnValue(row, ['Facility Id', 'FacilityId', 'كود المنشأة']) || '');
+  const facilityName = String(findColumnValue(row, ['Facility Name', 'FacilityName', 'اسم المنشأة', 'المستشفى']) || '');
+  const patientId = String(findColumnValue(row, ['Patient ID', 'PatientId', 'رقم المريض']) || '');
+  const patientName = String(findColumnValue(row, ['Patient Name', 'PatientName', 'اسم المريض']) || '');
 
   const birthDateVal = findColumnValue(row, ['Birth Date', 'BirthDate', 'تاريخ الميلاد']);
   const { age, ageGroup } = calculateAgeAndGroup(birthDateVal);
-  const birthDateStr = parseExcelDate(birthDateVal)?.day || '1990-01-01';
+  const birthDateStr = parseExcelDate(birthDateVal)?.day || '';
 
   const gender = normalizeGender(findColumnValue(row, ['patient gender', 'gender', 'الجنس']));
-  const billingGroup = String(findColumnValue(row, ['Billing Group Desc', 'BillingGroup', 'فئة الفاتورة', 'التأمين']) || 'تأمين صحي عام');
+  const billingGroup = String(findColumnValue(row, ['Billing Group Desc', 'BillingGroup', 'فئة الفاتورة', 'التأمين']) || '');
 
   // Dates
   const checkInObj = parseExcelDate(findColumnValue(row, ['Check in Date', 'CheckInDate', 'تاريخ التسجيل']));
@@ -113,27 +113,22 @@ export function normalizeRawRecord(row: RawPatientRecord, index: number, sourceF
   const consultObj = parseExcelDate(findColumnValue(row, ['Consultation Date', 'ConsultationDate', 'تاريخ الكشف']));
   const checkOutObj = parseExcelDate(findColumnValue(row, ['Check Out Date', 'CheckOutDate', 'تاريخ الخروج']));
 
-  const checkInDate = checkInObj?.formatted || dayjs().subtract(1, 'hour').format('YYYY-MM-DD HH:mm');
-  const assignDate = assignObj?.formatted || checkInDate;
-  const consultationDate = consultObj?.formatted || assignDate;
-  const checkOutDate = checkOutObj?.formatted || consultationDate;
+  const checkInDate = checkInObj?.formatted || '';
+  const assignDate = assignObj?.formatted || '';
+  const consultationDate = consultObj?.formatted || '';
+  const checkOutDate = checkOutObj?.formatted || '';
 
   // Compute minute differences
   let waitTimeMinutes: number | null = null;
   if (checkInObj && assignObj) {
     const diff = dayjs(assignObj.formatted).diff(dayjs(checkInObj.formatted), 'minute');
     waitTimeMinutes = diff >= 0 ? diff : 0;
-  } else {
-    // Default estimate if missing
-    waitTimeMinutes = Math.floor(Math.random() * 25) + 10;
   }
 
   let consultationTimeMinutes: number | null = null;
   if (consultObj && checkOutObj) {
     const diff = dayjs(checkOutObj.formatted).diff(dayjs(consultObj.formatted), 'minute');
     consultationTimeMinutes = diff >= 0 ? diff : 0;
-  } else {
-    consultationTimeMinutes = Math.floor(Math.random() * 15) + 5;
   }
 
   let totalTurnaroundMinutes: number | null = null;
@@ -142,14 +137,17 @@ export function normalizeRawRecord(row: RawPatientRecord, index: number, sourceF
     totalTurnaroundMinutes = diff >= 0 ? diff : 0;
   }
 
-  const rawStatus = String(findColumnValue(row, ['Queue Status Desc', 'QueueStatus', 'حالة الطابور', 'حالة الاستشارة']) || 'مكتمل (Completed)');
-  let queueStatus = 'مكتمل';
-  if (rawStatus.toLowerCase().includes('cancel') || rawStatus.includes('ملغاة')) queueStatus = 'ملغاة';
-  else if (rawStatus.toLowerCase().includes('wait') || rawStatus.includes('انتظار')) queueStatus = 'قيد الانتظار';
-  else if (rawStatus.toLowerCase().includes('progress') || rawStatus.includes('قيد')) queueStatus = 'قيد الكشف';
+  const rawStatus = String(findColumnValue(row, ['Queue Status Desc', 'QueueStatus', 'حالة الطابور', 'حالة الاستشارة']) || '');
+  let queueStatus = '';
+  if (rawStatus) {
+    if (rawStatus.toLowerCase().includes('cancel') || rawStatus.includes('ملغاة')) queueStatus = 'ملغاة';
+    else if (rawStatus.toLowerCase().includes('wait') || rawStatus.includes('انتظار')) queueStatus = 'قيد الانتظار';
+    else if (rawStatus.toLowerCase().includes('progress') || rawStatus.includes('قيد')) queueStatus = 'قيد الكشف';
+    else queueStatus = 'مكتمل';
+  }
 
-  const consultPerformedBy = String(findColumnValue(row, ['Consult Performed By', 'Consultant', 'اسم الطبيب', 'الطبيب المعالج']) || 'د. محمد عبدالفتاح');
-  const consultPerformedDate = parseExcelDate(findColumnValue(row, ['Consult Performed Date', 'ConsultDate']))?.formatted || consultationDate;
+  const consultPerformedBy = String(findColumnValue(row, ['Consult Performed By', 'Consultant', 'اسم الطبيب', 'الطبيب المعالج']) || '');
+  const consultPerformedDate = parseExcelDate(findColumnValue(row, ['Consult Performed Date', 'ConsultDate']))?.formatted || '';
 
   return {
     id: `${sourceFile}-${index}-${patientId}`,
@@ -174,8 +172,8 @@ export function normalizeRawRecord(row: RawPatientRecord, index: number, sourceF
     waitTimeMinutes,
     consultationTimeMinutes,
     totalTurnaroundMinutes,
-    checkInHour: checkInObj?.hour ?? Math.floor(Math.random() * 12) + 8,
-    checkInDay: checkInObj?.day || dayjs().format('YYYY-MM-DD'),
+    checkInHour: checkInObj?.hour ?? 0,
+    checkInDay: checkInObj?.day || '',
     sourceFile
   };
 }
