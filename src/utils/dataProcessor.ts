@@ -71,6 +71,7 @@ export function calculateKpis(records: PatientRecord[]): KpiSummary {
       totalPatients: 0,
       avgWaitTime: 0,
       avgConsultTime: 0,
+      avgTurnaroundTime: 0,
       completedConsultations: 0,
       totalCancelled: 0,
       totalWaiting: 0,
