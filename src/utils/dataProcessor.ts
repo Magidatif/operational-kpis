@@ -156,15 +156,20 @@ export function calculatePeakHours(records: PatientRecord[]) {
  * Patient Flow Analysis: Check Ins vs Check Outs by Date
  */
 export function calculatePatientFlow(records: PatientRecord[]) {
-  const flowData: Record<string, { date: string; checkIns: number; checkOuts: number }> = {};
+  const flowData: Record<string, { date: string; checkIns: number; checkOuts: number; totalTurnaround: number; countTurnaround: number }> = {};
 
   records.forEach((r) => {
     // Check Ins
     if (r.checkInDay) {
       if (!flowData[r.checkInDay]) {
-        flowData[r.checkInDay] = { date: r.checkInDay, checkIns: 0, checkOuts: 0 };
+        flowData[r.checkInDay] = { date: r.checkInDay, checkIns: 0, checkOuts: 0, totalTurnaround: 0, countTurnaround: 0 };
       }
       flowData[r.checkInDay].checkIns++;
+
+      if (r.totalTurnaroundMinutes !== null && r.totalTurnaroundMinutes >= 0) {
+        flowData[r.checkInDay].totalTurnaround += r.totalTurnaroundMinutes;
+        flowData[r.checkInDay].countTurnaround++;
+      }
     }
 
     // Check Outs
@@ -172,14 +177,21 @@ export function calculatePatientFlow(records: PatientRecord[]) {
       const checkOutDay = r.checkOutDate.split(' ')[0];
       if (checkOutDay && checkOutDay.length === 10) {
         if (!flowData[checkOutDay]) {
-          flowData[checkOutDay] = { date: checkOutDay, checkIns: 0, checkOuts: 0 };
+          flowData[checkOutDay] = { date: checkOutDay, checkIns: 0, checkOuts: 0, totalTurnaround: 0, countTurnaround: 0 };
         }
         flowData[checkOutDay].checkOuts++;
       }
     }
   });
 
-  return Object.values(flowData).sort((a, b) => a.date.localeCompare(b.date));
+  return Object.values(flowData)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map(item => ({
+      date: item.date,
+      checkIns: item.checkIns,
+      checkOuts: item.checkOuts,
+      avgTurnaround: item.countTurnaround > 0 ? Math.round(item.totalTurnaround / item.countTurnaround) : 0
+    }));
 }
 
 /**

@@ -90,6 +90,7 @@ export const translations = {
     patientFlowSub: 'مقارنة بين إجمالي عدد حالات Check in و Check Out حسب التاريخ',
     checkInLabel: 'تسجيل دخول',
     checkOutLabel: 'تسجيل خروج',
+    avgTurnaroundLabel: 'متوسط مدة بقاء المريض',
     btnHospital: 'المستشفى',
     btnRegion: 'المنطقة',
 
@@ -260,7 +261,8 @@ export const translations = {
     patientFlowSub: 'Comparison between total Check ins and Check outs by date',
     checkInLabel: 'Check In',
     checkOutLabel: 'Check Out',
-    btnHospital: 'Facility',
+    avgTurnaroundLabel: 'Avg Turnaround Time',
+    btnHospital: 'Hospital',
     btnRegion: 'Region',
 
     // Consultants Analysis

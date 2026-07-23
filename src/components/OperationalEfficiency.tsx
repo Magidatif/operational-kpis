@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import {
-  AreaChart,
+  ComposedChart,
   Area,
   BarChart,
   Bar,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -223,7 +224,7 @@ export const OperationalEfficiency: React.FC<OperationalEfficiencyProps> = ({ re
 
         <div className="h-80 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={flowData} margin={{ top: 20, right: 30, left: -20, bottom: 0 }}>
+            <ComposedChart data={flowData} margin={{ top: 20, right: 30, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorCheckIn" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#0EA5E9" stopOpacity={0.8}/>
@@ -235,14 +236,19 @@ export const OperationalEfficiency: React.FC<OperationalEfficiencyProps> = ({ re
                 </linearGradient>
               </defs>
               <XAxis dataKey="date" stroke="#64748B" fontSize={11} tickLine={false} />
-              <YAxis stroke="#64748B" fontSize={11} tickLine={false} />
+              <YAxis yAxisId="left" stroke="#64748B" fontSize={11} tickLine={false} />
+              <YAxis yAxisId="right" orientation="right" stroke="#F59E0B" fontSize={11} tickLine={false} />
               <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
               <Tooltip
-                formatter={(value: any, name: any) => [value, name === 'checkIns' ? t.checkInLabel : t.checkOutLabel]}
+                formatter={(value: any, name: any) => {
+                  if (name === 'avgTurnaround') return [t.formatDuration(value), t.avgTurnaroundLabel];
+                  return [value, name === 'checkIns' ? t.checkInLabel : t.checkOutLabel];
+                }}
               />
-              <Area type="monotone" dataKey="checkIns" name="checkIns" stroke="#0EA5E9" fillOpacity={1} fill="url(#colorCheckIn)" strokeWidth={2} />
-              <Area type="monotone" dataKey="checkOuts" name="checkOuts" stroke="#10B981" fillOpacity={1} fill="url(#colorCheckOut)" strokeWidth={2} />
-            </AreaChart>
+              <Area yAxisId="left" type="monotone" dataKey="checkIns" name="checkIns" stroke="#0EA5E9" fillOpacity={1} fill="url(#colorCheckIn)" strokeWidth={2} />
+              <Area yAxisId="left" type="monotone" dataKey="checkOuts" name="checkOuts" stroke="#10B981" fillOpacity={1} fill="url(#colorCheckOut)" strokeWidth={2} />
+              <Line yAxisId="right" type="monotone" dataKey="avgTurnaround" name="avgTurnaround" stroke="#F59E0B" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+            </ComposedChart>
           </ResponsiveContainer>
         </div>
       </div>
